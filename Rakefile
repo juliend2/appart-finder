@@ -9,7 +9,9 @@ namespace :data do
   desc "Grab data from external sources"
   task :grab => :environment do
 
+    require 'open-uri'
     require 'anemone'
+    require 'nokogiri'
 
     base_url = 'http://www.kijiji.ca'
     search_params = '/b-immobilier/ville-de-montreal/beaubien/'
@@ -29,14 +31,58 @@ namespace :data do
           url = "#{base_url}#{item.css('.title a').first['href']}"
           price = item.css('.price').first.text.strip
           price = price =~ /Sur demande/ ? nil : price.sub(',', '.').gsub(/[^\d\.]/, '').to_f
+          date_posted = item.css('.date-posted').first.text.strip
+          if date_posted =~ /^\D/
+            date_posted = Time.now.strftime('%Y-%m-%d')
+          else
+            {
+              'janvier' => 'January',
+              'février' => 'February',
+              'mars' => 'March',
+              'avril' => 'April',
+              'mai' => 'May',
+              'juin' => 'June',
+              'juillet' => 'July',
+              'août' => 'August',
+              'septembre' => 'September',
+              'octobre' => 'October',
+              'novembre' => 'November',
+              'décembre' => 'December',
+            }.each { |k, v|
+              date_posted.sub!(k, v)
+            }
+            begin
+              puts "date_posted: #{date_posted.inspect}"
+              date_posted = Time.strptime(date_posted, '%e-%B-%y').strftime('%Y-%m-%d')
+            rescue
+              # puts "Failed"
+              exit
+            end
+          end
 
           if title !~ /^Recherch/ && price && price < 1000.0
-            annonce = {
+            annonce = Annonce.find_by_url(url)
+            annonce_params = {
               url: url,
               title: title,
-              price: price
+              price: price,
+              date_posted: date_posted
             }
-            puts annonce.inspect
+            if annonce.nil?
+              annonce_page_doc = Nokogiri::HTML(open(url))
+              latitude = annonce_page_doc.css("meta[property='og:latitude']").first
+              if latitude
+                annonce_params[:latitude] = latitude['content'].to_f
+              end
+              longitude = annonce_page_doc.css("meta[property='og:longitude']").first
+              if longitude
+                annonce_params[:longitude] = longitude['content'].to_f
+              end
+              puts "Saving Annonce: '#{annonce_params.inspect}'"
+              Annonce.create(annonce_params)
+            else
+              puts "Annonce is already there: '#{annonce.title}'"
+            end
           end
         end
       end
