@@ -1,25 +1,31 @@
 <h1>Annonces</h1>
-<table>
-<%- @annonces.sort_by{|annonce|
-    (annonce.longitude - TARGET_LONGITUDE) + (annonce.latitude - TARGET_LATITUDE)
-  }.each do |annonce| %>
-  <tr class="<%= annonce.state %>">
-    <td>
-      <%= link_to annonce.title, annonce.url %>
-    </td>
-    <td>
-      <%= annonce.latitude %>
-    </td>
-    <td>
-      <%= annonce.longitude %>
-    </td>
-    <td>
-      &nbsp;&nbsp;&nbsp;<%= annonce.price %>&nbsp;$
-    </td>
-    <td>
-      <%= link_to 'Keep', set_state_path(annonce.id, 'retained') %> | 
-      <%= link_to 'Reject', set_state_path(annonce.id, 'rejected') %>
-    </td>
-  </tr>
+
+<%- Annonce::PLACES.each do |k, v| %>
+  <h2 id="<%= k %>"><%= k %></h2>
+  <table>
+  <%- @annonces.sort_by{|annonce|
+      (annonce.longitude - v[:longitude]) + (annonce.latitude - v[:latitude])
+    }.each do |annonce| %>
+    <%- if annonce.place == k.to_s %>
+      <tr class="<%= annonce.state %>">
+        <td>
+          <%= link_to annonce.title, annonce.url %>
+        </td>
+        <td>
+          <%= annonce.latitude %>
+        </td>
+        <td>
+          <%= annonce.longitude %>
+        </td>
+        <td>
+          &nbsp;&nbsp;&nbsp;<%= annonce.price %>&nbsp;$
+        </td>
+        <td>
+          <%= link_to 'Keep', set_state_path(annonce.id, 'retained')+'?place='+k.to_s %> | 
+          <%= link_to 'Reject', set_state_path(annonce.id, 'rejected')+'?place='+k.to_s %>
+        </td>
+      </tr>
+    <%- end %>
+  <%- end %>
+  </table>
 <%- end %>
-</table>

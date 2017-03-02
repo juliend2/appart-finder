@@ -7,6 +7,6 @@ class AnnoncesController < ApplicationController
     @annonce = Annonce.find(params[:id])
     @annonce.state = params[:state]
     @annonce.save
-    redirect_to root_url
+    redirect_to(params.include?(:place) ? request.env['HTTP_REFERER']+"#"+params[:place] : :back)
   end
 end

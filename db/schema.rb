@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170302030636) do
+ActiveRecord::Schema.define(version: 20170302214215) do
 
   create_table "annonces", force: :cascade do |t|
     t.string "url",                              null: false
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(version: 20170302030636) do
     t.float  "longitude"
     t.float  "latitude"
     t.date   "date_posted"
+    t.string "place"
   end
 
   add_index "annonces", ["url"], name: "index_annonces_on_url", unique: true
