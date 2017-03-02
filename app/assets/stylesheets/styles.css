@@ -1,4 +1,28 @@
+body {
+  font: 12px/1 Arial;
+}
 
+table {
+    border-collapse: collapse;
+}
 tr.retained td  {
   font-weight: bold;
+}
+tr td {
+  border-bottom: 1px solid gray;
+}
+
+.places {
+  display: flex;
+  flow-direction: row;
+}
+.place {
+  outline: 1px solid gray;
+}
+
+.shorten {
+  max-width: 50px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }

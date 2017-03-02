@@ -62,7 +62,7 @@ namespace :data do
                   end
                 end
 
-                if title !~ /^Recherch/ && title !~ /\wchambre\w/i && title !~ /\wroom\w/i && price && price < 1000.0
+                if title !~ /^Recherch/ && title !~ /\wchambre/i && title !~ /\wroom\w/i && price && price < 1000.0
                   annonce = Annonce.find_by_url(url)
                   annonce_params = {
                     url: url,
