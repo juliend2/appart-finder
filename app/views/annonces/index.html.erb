@@ -1,6 +1,25 @@
 <h1>Annonces</h1>
-<ul>
-<%- @annonces.each do |annonce| %>
-  <li><%= annonce.title %></li>
+<table>
+<%- @annonces.sort_by{|annonce|
+    (annonce.longitude - TARGET_LONGITUDE) + (annonce.latitude - TARGET_LATITUDE)
+  }.each do |annonce| %>
+  <tr class="<%= annonce.state %>">
+    <td>
+      <%= link_to annonce.title, annonce.url %>
+    </td>
+    <td>
+      <%= annonce.latitude %>
+    </td>
+    <td>
+      <%= annonce.longitude %>
+    </td>
+    <td>
+      &nbsp;&nbsp;&nbsp;<%= annonce.price %>&nbsp;$
+    </td>
+    <td>
+      <%= link_to 'Keep', set_state_path(annonce.id, 'retained') %> | 
+      <%= link_to 'Reject', set_state_path(annonce.id, 'rejected') %>
+    </td>
+  </tr>
 <%- end %>
-</ul>
+</table>

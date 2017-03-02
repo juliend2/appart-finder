@@ -13,6 +13,7 @@ namespace :data do
     require 'anemone'
     require 'nokogiri'
 
+    # metro beaubien is at latitude: 45.5355332 , longitude: -73.6045011
     base_url = 'http://www.kijiji.ca'
     search_params = '/b-immobilier/ville-de-montreal/beaubien/'
     search_token = 'k0c34l1700281'
