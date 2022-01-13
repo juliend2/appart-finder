@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,19 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170302214215) do
+ActiveRecord::Schema.define(version: 2017_03_02_214215) do
 
   create_table "annonces", force: :cascade do |t|
-    t.string "url",                              null: false
-    t.string "state",       default: "unjudged"
+    t.string "url", null: false
+    t.string "state", default: "unjudged"
     t.string "title"
-    t.float  "price"
-    t.float  "longitude"
-    t.float  "latitude"
-    t.date   "date_posted"
+    t.float "price"
+    t.float "longitude"
+    t.float "latitude"
+    t.date "date_posted"
     t.string "place"
+    t.index ["url"], name: "index_annonces_on_url", unique: true
   end
-
-  add_index "annonces", ["url"], name: "index_annonces_on_url", unique: true
 
 end

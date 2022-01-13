@@ -13,11 +13,12 @@ namespace :data do
     require 'anemone'
     require 'nokogiri'
 
-    base_url = 'http://www.kijiji.ca'
-    search_token = 'k0c34l1700281'
+    base_url = 'https://www.kijiji.ca'
+    search_token = 'k0c30349001l1700281'
 
     anemone_opts = {
       user_agent: 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36', # http://www.useragentstring.com/index.php?id=19841
+      accept_cookies: true,
     }
 
     annonces = []
@@ -28,11 +29,14 @@ namespace :data do
           Anemone.crawl("#{base_url}#{search_params}#{search_token}", anemone_opts) do |anemone|
             anemone.on_every_page do |page|
               puts page.url
+              #pp page
               page.doc.css('.search-item').each do |item|
                 title = item.css('.title a').first.text.strip
                 url = "#{base_url}#{item.css('.title a').first['href']}"
                 price = item.css('.price').first.text.strip
+                puts "price 1: #{price}"
                 price = price =~ /Sur demande/ ? nil : price.sub(',', '.').gsub(/[^\d\.]/, '').to_f
+                puts "price 2: #{price}"
                 date_posted = item.css('.date-posted').first.text.strip
                 if date_posted =~ /^\D/
                   date_posted = Time.now.strftime('%Y-%m-%d')
@@ -62,7 +66,7 @@ namespace :data do
                   end
                 end
 
-                if title !~ /^Recherch/ && title !~ /\wchambre/i && title !~ /\wroom\w/i && price && price < 1000.0
+                if title !~ /^Recherch/ && title !~ /\wchambre/i && title !~ /\wroom\w/i && price # && price < 1000.0
                   annonce = Annonce.find_by_url(url)
                   annonce_params = {
                     url: url,

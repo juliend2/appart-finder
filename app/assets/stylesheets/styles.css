@@ -12,6 +12,10 @@ tr td {
   border-bottom: 1px solid gray;
 }
 
+tr td:nth-of-type(4) {
+  text-align: right;
+}
+
 .places {
   display: flex;
   flow-direction: row;

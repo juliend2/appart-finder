@@ -6,9 +6,10 @@
   <h2><%= k %></h2>
   <table id="<%= k %>">
   <%- @annonces.sort_by{|annonce|
-      (annonce.longitude - v[:longitude]) + (annonce.latitude - v[:latitude])
+      #(annonce.longitude - v[:longitude]) + (annonce.latitude - v[:latitude])
+      annonce.title
     }.each do |annonce| %>
-    <%- if annonce.place == k.to_s && annonce.price < 800 %>
+    <%- if annonce.place == k.to_s # && annonce.price < 800 %>
       <tr class="<%= annonce.state %>">
         <td>
           <%= link_to annonce.title, annonce.url %>

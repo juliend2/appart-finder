@@ -1,4 +1,4 @@
-class CreateAnnonces < ActiveRecord::Migration
+class CreateAnnonces < ActiveRecord::Migration[4.2]
   def change
     create_table :annonces do |t|
       t.string :url, null: false
