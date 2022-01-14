@@ -10,7 +10,7 @@ namespace :data do
   task :grab => :environment do
 
     require 'open-uri'
-    require 'anemone'
+    require 'medusa'
     require 'nokogiri'
 
     base_url = 'https://www.kijiji.ca'
@@ -18,7 +18,7 @@ namespace :data do
 
     anemone_opts = {
       user_agent: 'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36', # http://www.useragentstring.com/index.php?id=19841
-      accept_cookies: true,
+      # accept_cookies: true,
     }
 
     annonces = []
@@ -26,7 +26,7 @@ namespace :data do
     Annonce::PLACES.each do |place_slug, v|
       v[:search_terms].each do |search_params|
         begin
-          Anemone.crawl("#{base_url}#{search_params}#{search_token}", anemone_opts) do |anemone|
+          Medusa.crawl("#{base_url}#{search_params}#{search_token}", anemone_opts) do |anemone|
             anemone.on_every_page do |page|
               puts page.url
               #pp page

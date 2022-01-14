@@ -35,4 +35,49 @@ class Annonce < ActiveRecord::Base
     where("state = 'unjudged' OR state = 'retained'") #.where("latitude IS NOT NULL")
   end
 
+  class And
+    def initialize(token)
+      @token = token
+    end
+  end
+
+  def size
+    self.class.size(title)
+  end
+
+  def self.size(title)
+    tokens = title.split(/\s/)
+    tokens.map! do |token|
+      if token =~ /^[0-9]+$/
+        # Integer
+        token.to_i
+      elsif (true if Float(token) rescue false)
+        # Float
+        token.to_f
+      else
+        # String
+        case token
+        when '1/2', '½', /demie?/ then 0.5
+        when 'et', '&' then And.new(token)
+        when /(\d+)½$/ then $1.to_i + 0.5
+        else
+          token
+        end
+      end
+    end
+
+    # pp tokens
+
+    case tokens
+    in [*, Integer => int, Float => float, *]
+      int + float
+    in [*, Integer => int, And, Float => float, *]
+      int + float
+    in [*, Float => float, *]
+      float
+    else
+      tokens
+    end
+  end
+
 end
