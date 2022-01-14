@@ -46,7 +46,7 @@ class Annonce < ActiveRecord::Base
   end
 
   def self.size(title)
-    tokens = title.split(/\s/)
+    tokens = title.split(/-|\s/)
     tokens.map! do |token|
       if token =~ /^[0-9]+$/
         # Integer
@@ -58,15 +58,13 @@ class Annonce < ActiveRecord::Base
         # String
         case token
         when '1/2', '½', /demie?/ then 0.5
-        when 'et', '&' then And.new(token)
+        when 'et', 'and', '&' then And.new(token)
         when /(\d+)½$/ then $1.to_i + 0.5
         else
           token
         end
       end
     end
-
-    # pp tokens
 
     case tokens
     in [*, Integer => int, Float => float, *]

@@ -17,6 +17,8 @@ class AnnonceTest < ActiveSupport::TestCase
   test "french" do
     assert_equal 1.5, Annonce.size("Un 1 et demi !")
     assert_equal 1.5, Annonce.size("1 et demie")
+    # with a dash:
+    assert_equal 3.5, Annonce.size('3 1/2-condo')
   end
 
   test "floats" do
